@@ -1,0 +1,6 @@
+flask
+cairosvg
+torch
+transformers
+diffusers
+Pillow

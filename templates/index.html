@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Image Generation</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>SVG Image Generation</h1>
+
+    <!-- Upload SVG Dataset -->
+    <section>
+        <h2>Upload SVG Dataset</h2>
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".svg" multiple>
+            <button type="submit">Upload</button>
+        </form>
+        <div id="upload-status"></div>
+    </section>
+
+    <!-- Train Model -->
+    <section>
+        <h2>Train Model</h2>
+        <form id="train-form">
+            <label for="epochs">Epochs:</label>
+            <input type="number" id="epochs" name="epochs" value="5">
+            <label for="batch_size">Batch Size:</label>
+            <input type="number" id="batch_size" name="batch_size" value="8">
+            <label for="lr">Learning Rate:</label>
+            <input type="number" step="0.0001" id="lr" name="lr" value="0.0001">
+            <button type="submit">Start Training</button>
+        </form>
+        <div id="train-status"></div>
+    </section>
+
+    <!-- Generate Image -->
+    <section>
+        <h2>Generate Image</h2>
+        <form id="generate-form">
+            <label for="prompt">Prompt:</label>
+            <input type="text" id="prompt" name="prompt" placeholder="Enter prompt">
+            <button type="submit">Generate</button>
+        </form>
+        <div id="generate-status"></div>
+        <img id="generated-image" src="" alt="Generated Image">
+    </section>
+
+    <script>
+        // Upload Form
+        document.getElementById("upload-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch("/upload", {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+            document.getElementById("upload-status").innerText = result.message || result.error;
+        });
+
+        // Train Form
+        document.getElementById("train-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch("/train", {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+            document.getElementById("train-status").innerText = result.message || result.error;
+        });
+
+        // Generate Form
+        document.getElementById("generate-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch("/generate", {
+                method: "POST",
+                body: formData
+            });
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                document.getElementById("generated-image").src = url;
+            } else {
+                const result = await response.json();
+                document.getElementById("generate-status").innerText = result.error;
+            }
+        });
+    </script>
+</body>
+</html>

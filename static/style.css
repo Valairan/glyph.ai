@@ -1,0 +1,21 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+img {
+    margin-top: 20px;
+    max-width: 500px;
+    display: block;
+}
